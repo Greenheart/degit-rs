@@ -7,11 +7,11 @@ Forked from [psnszsn/degit-rs](https://github.com/psnszsn/degit-rs) with additio
 
 degit-rs is a rust rewrite of [degit](https://github.com/Rich-Harris/degit/). It downloads copies of git repositories from the internet, without the need for `git clone`. This is faster, since it does not download the `.git` folder (which contains all the git history) and allows you to initialize a new repository afterwards. It is useful for downloading project boilerplate templates.
 
-[![Crates.io](https://img.shields.io/crates/v/degit.svg)](https://crates.io/crates/degit)
+[![Crates.io](https://img.shields.io/crates/v/degit-rs.svg)](https://crates.io/crates/degit-rs)
 
 ## Installation
 ```
-cargo install degit
+cargo install degit-rs
 ```
 
 ## Usage examples
@@ -19,16 +19,16 @@ cargo install degit
 Simplest usage downloads the main branch on GitHub to the current working directory, or to a target directory if you provide it.
 
 ```
-degit user/repo
-degit user/repo path/to/project
+degit-rs user/repo
+degit-rs user/repo path/to/project
 ```
 
 You can also download from GitLab and Bitbucket using `gitlab:user/repo` and `bitbucket:user/repo`, respectively. Or you can specify something other than the main branch with:
 
 ```
-degit user/repo#dev         # by branch
-degit user/repo#v1.2.3      # by tag
-degit user/repo#1234abcd    # by commit hash
+degit-rs user/repo#dev         # by branch
+degit-rs user/repo#v1.2.3      # by tag
+degit-rs user/repo#1234abcd    # by commit hash
 ```
 
 ## Advantages over original degit
