@@ -1,11 +1,12 @@
-use clap::{App, Arg, crate_version};
+use clap::{Arg, ArgAction, Command, crate_version};
 
-fn main() {
-    let matches = App::new("degit-rs")
+#[tokio::main]
+async fn main() {
+    let matches = Command::new("degit-rs")
         .version(crate_version!())
         .about("Download the contents of a git repository without cloning it.")
         .arg(
-            Arg::with_name("src")
+            Arg::new("src")
                 .help("the source repo you want to download")
                 .long_help(
 "The repository you want to download. This can take any of the following forms:
@@ -35,26 +36,27 @@ And you can specify a branch (defaults to HEAD), tag, or commit from any of the 
 
                 .required(true)
                 .index(1)
-                .validator(degit_rs::validate_src),
+                .value_parser(degit_rs::validate_src),
         )
         .arg(
-            Arg::with_name("dest")
+            Arg::new("dest")
                 .help("download location")
                 .long_help("The destination directory. This is where the contents of the repository will be downloaded.")
                 .required(false)
                 .index(2)
-                .validator(degit_rs::validate_dest)
+                .value_parser(degit_rs::validate_dest)
                 .default_value("."),
         )
         .arg(
-            Arg::with_name("v")
-                .short("v")
-                .multiple(true)
-                .help("Sets the level of verbosity"),
+            Arg::new("v")
+                .short('v')
+                .help("Sets the level of verbosity")
+                .action(ArgAction::Count),
         )
         .get_matches();
 
-    let src = matches.value_of("src").unwrap();
-    let dest = matches.value_of("dest").unwrap();
+    let src = matches.get_one::<String>("src").unwrap();
+    let dest = matches.get_one::<String>("dest").unwrap();
+
     degit_rs::degit(src, dest);
 }
