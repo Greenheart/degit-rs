@@ -105,20 +105,13 @@ fn parse(src: &str) -> Result<Repo, Box<dyn Error>> {
 
 fn download(repo: Repo, dest: PathBuf) -> Result<(), Box<dyn Error>> {
     let hash = get_hash(&repo)?;
-
+    let url = repo.url();
     let url = match &repo.host {
-        Host::GitHub => format!("{}/archive/{}.tar.gz", repo.url(), hash),
-        Host::GitLab(_) => format!(
-            "{}/-/archive/{}/{}-{}.tar.gz",
-            repo.url(),
-            hash,
-            repo.name,
-            hash
-        ),
-        Host::BitBucket => format!("{}/get/{}.tar.gz", repo.url(), hash),
+        Host::GitHub => format!("{url}/archive/{hash}.tar.gz"),
+        Host::GitLab(_) => format!("{url}/-/archive/{hash}/{}-{hash}.tar.gz", repo.name),
+        Host::BitBucket => format!("{url}/get/{hash}.tar.gz"),
     };
-    // println!("{}", url);
-    let client = reqwest::Client::new();
+    let client = reqwest::blocking::Client::new();
 
     let request = client.get(&url).send().unwrap();
     match request.status() {
@@ -136,6 +129,7 @@ fn download(repo: Repo, dest: PathBuf) -> Result<(), Box<dyn Error>> {
             let p = ProgressBar::new(x);
             p.set_style(ProgressStyle::default_bar()
                      .template("> {wide_msg}\n{spinner:.green} [{elapsed_precise}] [{bar:40.cyan/blue}] {bytes}/{total_bytes} ({eta})")
+                     .expect("failed template")
                      .progress_chars("#>-"));
             p
         }
@@ -167,13 +161,12 @@ fn download(repo: Repo, dest: PathBuf) -> Result<(), Box<dyn Error>> {
 
             // If subdirectory is specified, filter and strip it
             let final_path = if let Some(subdir) = &repo.subdir {
-                if path.starts_with(subdir) {
-                    match path.strip_prefix(subdir) {
-                        Ok(p) => p.to_owned(),
-                        Err(e) => return Some(Err(e.into())),
-                    }
-                } else {
-                    return None; // Skip files not in the subdirectory
+                if !path.starts_with(subdir) {
+                    return None;
+                }
+                match path.strip_prefix(subdir) {
+                    Ok(p) => p.to_owned(),
+                    Err(e) => return Some(Err(e.into())),
                 }
             } else {
                 path
@@ -185,18 +178,18 @@ fn download(repo: Repo, dest: PathBuf) -> Result<(), Box<dyn Error>> {
             }
         })
         .filter_map(|e| e.ok())
-        .for_each(|x| pb.set_message(&format!("{}", x.display())));
+        .for_each(|x| pb.set_message(format!("{}", x.to_string_lossy())));
 
     // archive.unpack(dest).unwrap();
     pb.finish_with_message("Done...");
     Ok(())
 }
 
-pub fn validate_src(src: String) -> Result<(), String> {
+pub fn validate_src(src: &str) -> Result<(), String> {
     parse(&src).map(|_| ()).map_err(|x| x.to_string())
 }
 
-pub fn validate_dest(dest: String) -> Result<(), String> {
+pub fn validate_dest(dest: &str) -> Result<(), String> {
     let path = PathBuf::from(dest);
     if path.exists() {
         if path.is_dir() {

@@ -1,18 +1,25 @@
 [package]
 name = "degit-rs"
-version = "0.2.2"
-authors = ["Vlad Pănăzan <brgdvz@gmail.com>", "Zach Fedor <zachfedor@gmail.com>"]
+version = "0.2.3"
+authors = [
+    "Vlad Pănăzan <brgdvz@gmail.com>",
+    "Zach Fedor <zachfedor@gmail.com>",
+]
 edition = "2024"
 description = "Rust rewrite of degit"
 license = "MIT"
-readme= "README.md"
+readme = "README.md"
 repository = "https://github.com/zachfedor/degit-rs"
 
 [dependencies]
-clap = "2.33.0"
+clap = { version = "4.5.51", features = ["cargo"] }
 regex = "1.1.7"
-reqwest = "0.9.18"
-indicatif = "0.11.0"
+reqwest = { version = "0.12.24", default-features = false, features = [
+    "blocking",
+    "rustls-tls",
+] }
+indicatif = "0.18.2"
 flate2 = "1.0.9"
 tar = "0.4.26"
-colored = "1.8.0"
+colored = "3.0.0"
+tokio = { version = "1.48.0", features = ["full"] }
