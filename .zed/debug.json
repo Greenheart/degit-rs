@@ -1,0 +1,19 @@
+[
+  {
+    "label": "Build & Debug degit-rs with example repo",
+    "adapter": "CodeLLDB",
+    "build": {
+      "command": "cargo",
+      "args": ["build"],
+    },
+    // sourceLanguages is required for CodeLLDB (not GDB) when using Rust
+    "sourceLanguages": ["rust"],
+    "request": "launch",
+    "program": "$ZED_WORKTREE_ROOT/target/debug/degit-rs",
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "args": [
+      "https://github.com/Greenheart/svelte-encrypted-spa",
+      "output/test",
+    ],
+  },
+]
