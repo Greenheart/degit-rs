@@ -1,19 +1,17 @@
-use clap::{Arg, ArgAction, Command, crate_version};
+use clap::{ArgAction, Parser};
 
-fn main() {
-    let matches = Command::new("degit-rs")
-        .version(crate_version!())
-        .about("Download the contents of a git repository without cloning it.")
-        .arg(
-            Arg::new("src")
-                .help("the source repo you want to download")
-                .long_help(
-"The repository you want to download. This can take any of the following forms:
+/// Download the contents of a git repository without cloning it.
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// The source repo you want to download.
+    #[arg(
+        long_help = "The repository you want to download. This can take any of the following forms:
 
 GitHub:
-  user/repo
-  github:user/repo
-  https://github.com/user/repo
+    user/repo
+    github:user/repo
+    https://github.com/user/repo
 
 GitLab:
     gitlab:user/repo
@@ -31,31 +29,24 @@ And you can specify a branch (defaults to HEAD), tag, or commit from any of the 
     user/repo#v1.0.0
     user/repo#abcd1234
 
-")
+"
+    )]
+    src: String,
 
-                .required(true)
-                .index(1)
-                .value_parser(degit_rs::validate_src),
-        )
-        .arg(
-            Arg::new("dest")
-                .help("download location")
-                .long_help("The destination directory. This is where the contents of the repository will be downloaded.")
-                .required(false)
-                .index(2)
-                .value_parser(degit_rs::validate_dest)
-                .default_value("."),
-        )
-        .arg(
-            Arg::new("v")
-                .short('v')
-                .help("Sets the level of verbosity")
-                .action(ArgAction::Count),
-        )
-        .get_matches();
+    /// The destination directory. This is where the contents of the repository will be downloaded.
+    #[arg(default_value_t = String::from("."))]
+    dest: String,
 
-    let src = matches.get_one::<String>("src").unwrap();
-    let dest = matches.get_one::<String>("dest").unwrap();
+    /// Controls how verbose the log output is.
+    #[arg(short, action = ArgAction::Count)]
+    v: u8,
+}
+
+fn main() {
+    let args = Args::parse();
+
+    let src = degit_rs::parse_src(&args.src).unwrap();
+    let dest = degit_rs::parse_dest(&args.dest).unwrap();
 
     degit_rs::degit(src, dest);
 }
