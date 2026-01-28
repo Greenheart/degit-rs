@@ -200,7 +200,7 @@ pub fn parse_dest(dest: &str) -> Result<PathBuf, String> {
             Err("Destination is not a directory.")?
         }
     }
-    let mut real_path = {
+    let real_path = {
         if path.is_relative() {
             let mut realpath = std::fs::canonicalize(std::path::Path::new(".")).unwrap();
 
@@ -219,8 +219,8 @@ pub fn parse_dest(dest: &str) -> Result<PathBuf, String> {
             path
         }
     };
-    while !real_path.exists() {
-        real_path.pop();
+    if !real_path.exists() {
+        std::fs::create_dir_all(&real_path).expect("Creating directory");
     }
     if std::fs::metadata(&real_path)
         .unwrap()
