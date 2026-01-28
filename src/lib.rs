@@ -13,7 +13,7 @@ enum Host {
 }
 
 #[derive(Debug, PartialEq)]
-struct Repo {
+pub struct Repo {
     host: Host,
     owner: String,
     name: String,
@@ -51,9 +51,8 @@ impl fmt::Display for Repo {
     }
 }
 
-pub fn degit(src: &str, dest: &str) {
-    let repo = parse(src).unwrap();
-    match download(repo, PathBuf::from(dest)) {
+pub fn degit(repo: Repo, dest: PathBuf) {
+    match download(repo, dest) {
         Err(x) => println!("{}", x),
         _ => (),
     }
@@ -185,11 +184,11 @@ fn download(repo: Repo, dest: PathBuf) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-pub fn validate_src(src: &str) -> Result<(), String> {
-    parse(&src).map(|_| ()).map_err(|x| x.to_string())
+pub fn parse_src(src: &str) -> Result<Repo, String> {
+    parse(&src).map(|src| src).map_err(|x| x.to_string())
 }
 
-pub fn validate_dest(dest: &str) -> Result<(), String> {
+pub fn parse_dest(dest: &str) -> Result<PathBuf, String> {
     let path = PathBuf::from(dest);
     if path.exists() {
         if path.is_dir() {
@@ -201,7 +200,7 @@ pub fn validate_dest(dest: &str) -> Result<(), String> {
             Err("Destination is not a directory.")?
         }
     }
-    let mut realpath = {
+    let mut real_path = {
         if path.is_relative() {
             let mut realpath = std::fs::canonicalize(std::path::Path::new(".")).unwrap();
 
@@ -220,10 +219,10 @@ pub fn validate_dest(dest: &str) -> Result<(), String> {
             path
         }
     };
-    while !realpath.exists() {
-        realpath.pop();
+    while !real_path.exists() {
+        real_path.pop();
     }
-    if std::fs::metadata(&realpath)
+    if std::fs::metadata(&real_path)
         .unwrap()
         .permissions()
         .readonly()
@@ -232,7 +231,7 @@ pub fn validate_dest(dest: &str) -> Result<(), String> {
     }
     // println!("realpath: {:?}", realpath);
 
-    Ok(())
+    Ok(real_path)
 }
 
 #[derive(Debug, Clone, PartialEq)]
