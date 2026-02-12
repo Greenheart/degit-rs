@@ -1,4 +1,5 @@
 use clap::{ArgAction, Parser};
+use std::error::Error;
 
 /// Download the contents of a git repository without cloning it.
 #[derive(Parser, Debug)]
@@ -42,7 +43,7 @@ And you can specify a branch (defaults to HEAD), tag, or commit from any of the 
     v: u8,
 }
 
-fn main() -> Result<(), String> {
+fn main() -> Result<(), Box<dyn Error>> {
     let args = Args::parse();
 
     // NOTE: Value parsing could be further improved by using clap's derive API
@@ -51,7 +52,7 @@ fn main() -> Result<(), String> {
     let src = degit_rs::parse_src(&args.src)?;
     let dest = degit_rs::parse_dest(&args.dest)?;
 
-    degit_rs::degit(src, dest);
+    degit_rs::degit(src, dest)?;
 
     Ok(())
 }

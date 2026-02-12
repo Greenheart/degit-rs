@@ -51,13 +51,6 @@ impl fmt::Display for Repo {
     }
 }
 
-pub fn degit(repo: Repo, dest: PathBuf) {
-    match download(repo, dest) {
-        Err(x) => eprintln!("{}", x),
-        _ => (),
-    }
-}
-
 /// Parse a Git pattern - either from a known provider, or an URL to a git repository.
 fn parse_git_pattern(src: &str) -> Result<Repo, Box<dyn Error>> {
     let re = Regex::new(
@@ -103,7 +96,8 @@ fn parse_git_pattern(src: &str) -> Result<Repo, Box<dyn Error>> {
     return Ok(res);
 }
 
-fn download(repo: Repo, dest: PathBuf) -> Result<(), Box<dyn Error>> {
+/// Download a Git repo tarball and extract it to the destination
+pub fn degit(repo: Repo, dest: PathBuf) -> Result<(), Box<dyn Error>> {
     let hash = get_hash(&repo)?;
     let url = repo.url();
     let url = match &repo.host {

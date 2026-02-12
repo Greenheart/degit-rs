@@ -13,7 +13,7 @@ fn branch() {
         parse_git_pattern("zachfedor/degit-rs-test-repo#dev").unwrap(),
         repo
     );
-    assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
+    assert_eq!(degit(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
 }
 
 #[test]
@@ -29,7 +29,7 @@ fn tag() {
         parse_git_pattern("zachfedor/degit-rs-test-repo#v0.0.1").unwrap(),
         repo
     );
-    assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
+    assert_eq!(degit(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
 }
 
 #[test]
@@ -45,7 +45,7 @@ fn commit() {
         parse_git_pattern("zachfedor/degit-rs-test-repo#d75ef1c").unwrap(),
         repo
     );
-    assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
+    assert_eq!(degit(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
 }
 
 #[test]
@@ -61,7 +61,7 @@ fn subdir() {
         parse_git_pattern("zachfedor/degit-rs-test-repo/subdir").unwrap(),
         repo
     );
-    assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
+    assert_eq!(degit(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
 }
 
 #[test]
@@ -77,7 +77,7 @@ fn subdir_and_gitref() {
         parse_git_pattern("zachfedor/degit-rs-test-repo/subdir#dev").unwrap(),
         repo
     );
-    assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
+    assert_eq!(degit(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
 }
 
 #[test]
@@ -103,7 +103,7 @@ fn github() {
         parse_git_pattern("git@github.com:octocat/Spoon-Knife.git").unwrap(),
         repo
     );
-    assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
+    assert_eq!(degit(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
 }
 
 #[test]
@@ -128,7 +128,7 @@ fn bitbucket() {
         parse_git_pattern("bitbucket:Rich_Harris/degit-test-repo").unwrap(),
         repo
     );
-    assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
+    assert_eq!(degit(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
 }
 
 #[test]
@@ -153,7 +153,7 @@ fn gitlab() {
         parse_git_pattern("git@gitlab.com:zachfedor/spoon-knife.git").unwrap(),
         repo
     );
-    assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
+    assert_eq!(degit(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
 }
 
 // TODO: Add tests for self-hosted GitLab repositories
@@ -175,5 +175,5 @@ fn gitlab() {
 //         parse("git@gitlab.gnome.org:bilelmoussaoui/gtk-rust-template.git").unwrap(),
 //         repo
 //     );
-//     assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
+//     assert_eq!(degit(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
 // }
