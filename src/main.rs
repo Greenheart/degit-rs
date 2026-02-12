@@ -2,7 +2,7 @@ use clap::{ArgAction, Parser};
 
 /// Download the contents of a git repository without cloning it.
 #[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
+#[command(version, about, long_about = None, arg_required_else_help = true)]
 struct Args {
     /// The source repo you want to download.
     #[arg(
