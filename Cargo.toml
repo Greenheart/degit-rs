@@ -13,13 +13,13 @@ readme = "README.md"
 repository = "https://github.com/zachfedor/degit-rs"
 
 [dependencies]
-clap = { version = "4.5.55", features = ["derive"] }
-regex = "1.12.2"
-reqwest = { version = "0.13.1", default-features = false, features = [
+clap = { version = "4.5.58", features = ["derive"] }
+regex = "1.12.3"
+reqwest = { version = "0.13.2", default-features = false, features = [
     "blocking",
     "rustls",
 ] }
 indicatif = "0.18.3"
-flate2 = "1.1.8"
+flate2 = "1.1.9"
 tar = "0.4.44"
 colored = "3.1.1"
