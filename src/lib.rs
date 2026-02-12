@@ -53,7 +53,7 @@ impl fmt::Display for Repo {
 
 pub fn degit(repo: Repo, dest: PathBuf) {
     match download(repo, dest) {
-        Err(x) => println!("{}", x),
+        Err(x) => eprintln!("{}", x),
         _ => (),
     }
 }
