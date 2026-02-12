@@ -9,7 +9,10 @@ fn branch() {
         subdir: None,
         gitref: Some("dev".to_string()),
     };
-    assert_eq!(parse("zachfedor/degit-rs-test-repo#dev").unwrap(), repo);
+    assert_eq!(
+        parse_git_pattern("zachfedor/degit-rs-test-repo#dev").unwrap(),
+        repo
+    );
     assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
 }
 
@@ -22,7 +25,10 @@ fn tag() {
         subdir: None,
         gitref: Some("v0.0.1".to_string()),
     };
-    assert_eq!(parse("zachfedor/degit-rs-test-repo#v0.0.1").unwrap(), repo);
+    assert_eq!(
+        parse_git_pattern("zachfedor/degit-rs-test-repo#v0.0.1").unwrap(),
+        repo
+    );
     assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
 }
 
@@ -35,7 +41,10 @@ fn commit() {
         subdir: None,
         gitref: Some("d75ef1c".to_string()),
     };
-    assert_eq!(parse("zachfedor/degit-rs-test-repo#d75ef1c").unwrap(), repo);
+    assert_eq!(
+        parse_git_pattern("zachfedor/degit-rs-test-repo#d75ef1c").unwrap(),
+        repo
+    );
     assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
 }
 
@@ -48,7 +57,10 @@ fn subdir() {
         subdir: Some("subdir".to_string()),
         gitref: None,
     };
-    assert_eq!(parse("zachfedor/degit-rs-test-repo/subdir").unwrap(), repo);
+    assert_eq!(
+        parse_git_pattern("zachfedor/degit-rs-test-repo/subdir").unwrap(),
+        repo
+    );
     assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
 }
 
@@ -62,7 +74,7 @@ fn subdir_and_gitref() {
         gitref: Some("dev".to_string()),
     };
     assert_eq!(
-        parse("zachfedor/degit-rs-test-repo/subdir#dev").unwrap(),
+        parse_git_pattern("zachfedor/degit-rs-test-repo/subdir#dev").unwrap(),
         repo
     );
     assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
@@ -78,14 +90,17 @@ fn github() {
         gitref: None,
     };
 
-    assert_eq!(parse("octocat/Spoon-Knife").unwrap(), repo);
-    assert_eq!(parse("github:octocat/Spoon-Knife").unwrap(), repo);
+    assert_eq!(parse_git_pattern("octocat/Spoon-Knife").unwrap(), repo);
     assert_eq!(
-        parse("https://github.com/octocat/Spoon-Knife.git").unwrap(),
+        parse_git_pattern("github:octocat/Spoon-Knife").unwrap(),
         repo
     );
     assert_eq!(
-        parse("git@github.com:octocat/Spoon-Knife.git").unwrap(),
+        parse_git_pattern("https://github.com/octocat/Spoon-Knife.git").unwrap(),
+        repo
+    );
+    assert_eq!(
+        parse_git_pattern("git@github.com:octocat/Spoon-Knife.git").unwrap(),
         repo
     );
     assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
@@ -102,15 +117,15 @@ fn bitbucket() {
     };
 
     assert_eq!(
-        parse("https://bitbucket.org/Rich_Harris/degit-test-repo.git").unwrap(),
+        parse_git_pattern("https://bitbucket.org/Rich_Harris/degit-test-repo.git").unwrap(),
         repo
     );
     assert_eq!(
-        parse("git@bitbucket.org:Rich_Harris/degit-test-repo.git").unwrap(),
+        parse_git_pattern("git@bitbucket.org:Rich_Harris/degit-test-repo.git").unwrap(),
         repo
     );
     assert_eq!(
-        parse("bitbucket:Rich_Harris/degit-test-repo").unwrap(),
+        parse_git_pattern("bitbucket:Rich_Harris/degit-test-repo").unwrap(),
         repo
     );
     assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());
@@ -126,13 +141,16 @@ fn gitlab() {
         gitref: None,
     };
 
-    assert_eq!(parse("gitlab:zachfedor/spoon-knife").unwrap(), repo);
     assert_eq!(
-        parse("https://gitlab.com/zachfedor/spoon-knife.git").unwrap(),
+        parse_git_pattern("gitlab:zachfedor/spoon-knife").unwrap(),
         repo
     );
     assert_eq!(
-        parse("git@gitlab.com:zachfedor/spoon-knife.git").unwrap(),
+        parse_git_pattern("https://gitlab.com/zachfedor/spoon-knife.git").unwrap(),
+        repo
+    );
+    assert_eq!(
+        parse_git_pattern("git@gitlab.com:zachfedor/spoon-knife.git").unwrap(),
         repo
     );
     assert_eq!(download(repo, PathBuf::from("/tmp/tests")).unwrap(), ());

@@ -58,7 +58,8 @@ pub fn degit(repo: Repo, dest: PathBuf) {
     }
 }
 
-fn parse(src: &str) -> Result<Repo, Box<dyn Error>> {
+/// Parse a Git pattern - either from a known provider, or an URL to a git repository.
+fn parse_git_pattern(src: &str) -> Result<Repo, Box<dyn Error>> {
     let re = Regex::new(
             r"^(?:(?:https://)?([^:/]+\.[^:/]+)/|git@([^:/]+)[:/]|([^/]+):)?([^/\s]+)/([^/\s#]+)((?:/[^/\s#]+)+)?(?:/)?(?:#(.+))?"
         ).unwrap();
@@ -185,7 +186,9 @@ fn download(repo: Repo, dest: PathBuf) -> Result<(), Box<dyn Error>> {
 }
 
 pub fn parse_src(src: &str) -> Result<Repo, String> {
-    parse(&src).map(|src| src).map_err(|x| x.to_string())
+    parse_git_pattern(&src)
+        .map(|src| src)
+        .map_err(|x| x.to_string())
 }
 
 pub fn parse_dest(dest: &str) -> Result<PathBuf, String> {
