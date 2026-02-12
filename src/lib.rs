@@ -93,7 +93,7 @@ fn parse_git_pattern(src: &str) -> Result<Repo, Box<dyn Error>> {
             .map(|m| m.as_str().trim_start_matches('/').to_string()),
         gitref: captures.get(7).map(|m| m.as_str().to_string()),
     };
-    return Ok(res);
+    Ok(res)
 }
 
 /// Download a Git repo tarball and extract it to the destination
@@ -127,10 +127,7 @@ pub fn degit(repo: Repo, dest: PathBuf) -> Result<(), Box<dyn Error>> {
                      .progress_chars("#>-"));
             p
         }
-        None => {
-            let p = ProgressBar::new_spinner();
-            p
-        }
+        None => ProgressBar::new_spinner(),
     };
 
     println!("Downloading {} to {}", repo, dest.display());
@@ -180,9 +177,7 @@ pub fn degit(repo: Repo, dest: PathBuf) -> Result<(), Box<dyn Error>> {
 }
 
 pub fn parse_src(src: &str) -> Result<Repo, String> {
-    parse_git_pattern(&src)
-        .map(|src| src)
-        .map_err(|x| x.to_string())
+    parse_git_pattern(src).map_err(|x| x.to_string())
 }
 
 pub fn parse_dest(dest: &str) -> Result<PathBuf, String> {
@@ -249,7 +244,7 @@ struct GitRef {
 fn fetch_refs(repo: &Repo) -> Result<Vec<GitRef>, Box<dyn Error>> {
     let output = Command::new("git")
         .arg("ls-remote")
-        .arg(&repo.url())
+        .arg(repo.url())
         .output()?;
 
     if !output.status.success() {
@@ -307,10 +302,10 @@ fn get_hash(repo: &Repo) -> Result<String, Box<dyn Error>> {
     let refs = fetch_refs(repo)?;
 
     // If no gitref specified or it's "HEAD", return HEAD
-    if repo.gitref.is_none() || repo.gitref.as_deref() == Some("HEAD") {
-        if let Some(head_ref) = refs.iter().find(|r| r.ref_type == RefType::Head) {
-            return Ok(head_ref.hash.clone());
-        }
+    if (repo.gitref.is_none() || repo.gitref.as_deref() == Some("HEAD"))
+        && let Some(head_ref) = refs.iter().find(|r| r.ref_type == RefType::Head)
+    {
+        return Ok(head_ref.hash.clone());
     }
 
     // Otherwise search for matching ref
