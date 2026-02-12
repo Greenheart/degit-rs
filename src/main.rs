@@ -42,14 +42,16 @@ And you can specify a branch (defaults to HEAD), tag, or commit from any of the 
     v: u8,
 }
 
-fn main() {
+fn main() -> Result<(), String> {
     let args = Args::parse();
 
     // NOTE: Value parsing could be further improved by using clap's derive API
     // See: https://docs.rs/clap/latest/clap/_derive/_tutorial/index.html#validated-values
     // Didn't get it to work though, so just leaving this here for the future.
-    let src = degit_rs::parse_src(&args.src).unwrap();
-    let dest = degit_rs::parse_dest(&args.dest).unwrap();
+    let src = degit_rs::parse_src(&args.src)?;
+    let dest = degit_rs::parse_dest(&args.dest)?;
 
     degit_rs::degit(src, dest);
+
+    Ok(())
 }
