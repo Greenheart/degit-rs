@@ -17,13 +17,13 @@ name = "degit"
 path = "src/main.rs"
 
 [dependencies]
-clap = { version = "4.5.58", features = ["derive"] }
+clap = { version = "4.5.60", features = ["derive"] }
 regex = "1.12.3"
 reqwest = { version = "0.13.2", default-features = false, features = [
     "blocking",
     "rustls",
 ] }
-indicatif = "0.18.3"
+indicatif = "0.18.4"
 flate2 = "1.1.9"
 tar = "0.4.44"
 colored = "3.1.1"
