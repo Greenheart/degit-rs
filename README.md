@@ -16,21 +16,33 @@ Forked from [psnszsn/degit-rs](https://github.com/psnszsn/degit-rs) with additio
 cargo install degit-rs
 ```
 
+Or install build and install the latest version from a local copy of this repo:
+
+```sh
+cargo install --path .
+```
+
 ## Usage examples
 
 Simplest usage downloads the main branch on GitHub to the current working directory, or to a target directory if you provide it.
 
 ```sh
-degit-rs user/repo
-degit-rs user/repo path/to/project
+degit user/repo
+degit user/repo path/to/project
 ```
 
 You can also download from GitLab and Bitbucket using `gitlab:user/repo` and `bitbucket:user/repo`, respectively. Or you can specify something other than the main branch with:
 
 ```sh
-degit-rs user/repo#dev         # by branch
-degit-rs user/repo#v1.2.3      # by tag
-degit-rs user/repo#1234abcd    # by commit hash
+degit user/repo#dev         # by branch
+degit user/repo#v1.2.3      # by tag
+degit user/repo#1234abcd    # by commit hash
+```
+
+Only download a specific subdirectory:
+
+```sh
+degit user/repo/some/directory
 ```
 
 ## Advantages over original degit
